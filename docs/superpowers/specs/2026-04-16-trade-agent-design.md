@@ -27,13 +27,13 @@ Architektura: Python pipeline z pollingiem co 2 min + APScheduler + Discord bot.
 
 Moduły:
 
-1. **XTB Client** — xStation5 API, pobiera świeczki (1H, 4H, 1D), bieżące ceny, stan portfela. Polling co 2 min w godzinach 8:00-22:00 CET.
+1. **Market Data** — Yahoo Finance (`yfinance`), pobiera świeczki (1H, 4H, 1D), bieżące ceny. Polling co 2 min w godzinach 8:00-22:00 CET.
 2. **Signal Engine** — oblicza wskaźniki TA, sprawdza reguły alertów, generuje sygnały.
 3. **Claude CLI** — `claude -p "..."` przez subprocess. Otrzymuje kontekst (wskaźniki, newsy) i generuje luźną wskazówkę.
-4. **Discord Bot** — pełny bot (`discord.py`), wysyła alerty i briefingi, odpowiada na pytania użytkownika.
-5. **Portfolio Tracker** — synchronizuje otwarte pozycje z XTB, zarządza dynamiczną watchlistą.
+4. **Discord Bot** — pełny bot (`discord.py`), wysyła alerty i briefingi, odpowiada na pytania użytkownika. Obsługuje też komendy portfela ("kupiłem złoto", "zamknąłem silver").
+5. **Portfolio Tracker** — prosty tracking przez komendy Discord. Użytkownik informuje bota co kupił/sprzedał, bot zapisuje w SQLite i uwzględnia w briefingach.
 
-Stack: Python 3.12, pandas-ta, claude CLI (subprocess), discord.py, APScheduler, SQLite.
+Stack: Python 3.12, yfinance, pandas-ta, claude CLI (subprocess), discord.py, APScheduler, SQLite.
 
 ## Signal Engine — wskaźniki i reguły
 
@@ -136,9 +136,9 @@ Bot:   "Dodano NVDA. Cena $892, trend UP, RSI 61."
 
 ### Dynamiczna lista
 
-- Sync z XTB co 10 min — nowy instrument w portfelu automatycznie dodany
-- Po zamknięciu pozycji instrument zostaje 7 dni, potem spada
-- Ręczne dodawanie/usuwanie przez bota Discord
+- Prosty tracking przez Discord — "kupiłem złoto" dodaje do portfela i watchlisty
+- "Zamknąłem silver" — usuwa z portfela, instrument zostaje na watchliście 7 dni
+- Ręczne dodawanie/usuwanie do watchlisty przez bota ("dodaj NVIDIA", "usuń TESLA")
 
 ### Przechowywanie (SQLite)
 
@@ -163,7 +163,7 @@ Dane kalendarza (CPI, Fed, NFP itp.) pobierane z darmowego API — Forex Factory
 | Proces | Częstotliwość | Godziny | Opis |
 |--------|--------------|---------|------|
 | Price poller | Co 2 min | 8:00-22:00 CET | Ceny, wskaźniki, alerty |
-| Portfolio sync | Co 10 min | 8:00-22:00 CET | Sync pozycji z XTB |
+| Portfolio tracking | Na żądanie | 24/7 | Przez komendy Discord |
 | Morning briefing | Raz dziennie | 7:30 CET | Briefing na Discord |
 | Screener okazji | Raz dziennie | 7:00 CET | Skan ~50 akcji |
 | Discord bot | Non-stop | 24/7 | Odpowiedzi na pytania |
@@ -177,7 +177,7 @@ TradeAgent/
 ├── config.yaml           # watchlista stała, parametry wskaźników, reguły alertów
 ├── .env                  # tokeny (XTB, Discord)
 ├── main.py               # punkt wejścia, APScheduler
-├── xtb_client.py         # komunikacja z xStation5 API
+├── market_data.py        # pobieranie danych z Yahoo Finance
 ├── signal_engine.py      # wskaźniki TA + reguły alertów
 ├── llm.py                # wywołanie claude CLI (subprocess)
 ├── discord_bot.py        # bot Discord (alerty + pytania)
