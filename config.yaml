@@ -1,0 +1,65 @@
+# Yahoo Finance ticker symbols
+default_watchlist:
+  - symbol: "GC=F"
+    name: "GOLD"
+  - symbol: "SI=F"
+    name: "SILVER"
+  - symbol: "PL=F"
+    name: "PLATINUM"
+  - symbol: "PA=F"
+    name: "PALLADIUM"
+
+screener_symbols:
+  - "AAPL"
+  - "MSFT"
+  - "GOOGL"
+  - "AMZN"
+  - "NVDA"
+  - "TSLA"
+  - "META"
+  - "NFLX"
+  - "AMD"
+  - "INTC"
+  - "JPM"
+  - "GS"
+  - "BA"
+  - "DIS"
+  - "NKE"
+  - "KO"
+  - "PFE"
+  - "XOM"
+  - "CVX"
+  - "WMT"
+
+alerts:
+  rsi_extreme:
+    enabled: true
+    overbought: 70
+    oversold: 30
+    timeframes: ["4h", "1d"]
+    cooldown_hours: 4
+  ma_cross:
+    enabled: true
+    fast: 20
+    slow: 50
+    timeframes: ["1d"]
+    cooldown_hours: 8
+  macd_cross:
+    enabled: true
+    timeframes: ["4h", "1d"]
+    cooldown_hours: 4
+  bb_breakout:
+    enabled: true
+    timeframes: ["4h"]
+    cooldown_hours: 4
+  portfolio_change:
+    enabled: true
+    threshold_pct: 3.0
+    cooldown_hours: 4
+
+schedule:
+  poll_interval_minutes: 2
+  market_hours_start: 8   # CET
+  market_hours_end: 22    # CET
+  briefing_time: "07:30"
+  screener_time: "07:00"
