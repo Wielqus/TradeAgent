@@ -1,0 +1,15 @@
+[Unit]
+Description=TradeAgent — Trading alerts Discord bot
+After=network.target
+
+[Service]
+Type=simple
+User=wielqus
+WorkingDirectory=/home/wielqus/TradeAgent
+ExecStart=/home/wielqus/TradeAgent/.venv/bin/python main.py
+Restart=always
+RestartSec=10
+EnvironmentFile=/home/wielqus/TradeAgent/.env
+
+[Install]
+WantedBy=multi-user.target
