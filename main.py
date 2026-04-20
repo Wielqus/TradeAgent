@@ -156,8 +156,29 @@ class TradeAgent:
 
 
 def main():
+    import argparse
+
+    parser = argparse.ArgumentParser(description="TradeAgent — Trading alerts Discord bot")
+    parser.add_argument("--test-briefing", action="store_true", help="Send a test briefing and exit")
+    parser.add_argument("--test-poll", action="store_true", help="Run one poll cycle and exit")
+    args = parser.parse_args()
+
     agent = TradeAgent()
-    asyncio.run(agent.run())
+
+    if args.test_briefing:
+        async def _test():
+            await agent.bot.login(os.getenv("DISCORD_BOT_TOKEN"))
+            await agent.morning_briefing()
+            await agent.bot.close()
+        asyncio.run(_test())
+    elif args.test_poll:
+        async def _test():
+            await agent.bot.login(os.getenv("DISCORD_BOT_TOKEN"))
+            await agent.poll_prices()
+            await agent.bot.close()
+        asyncio.run(_test())
+    else:
+        asyncio.run(agent.run())
 
 
 if __name__ == "__main__":
