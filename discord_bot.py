@@ -173,10 +173,14 @@ class TradeBot(commands.Bot):
 
     async def send_alert(self, text: str):
         channel = self.get_channel(self.alerts_channel_id)
+        if not channel:
+            channel = await self.fetch_channel(self.alerts_channel_id)
         if channel:
             await channel.send(text)
 
     async def send_briefing(self, text: str):
         channel = self.get_channel(self.briefing_channel_id)
+        if not channel:
+            channel = await self.fetch_channel(self.briefing_channel_id)
         if channel:
             await channel.send(text)
