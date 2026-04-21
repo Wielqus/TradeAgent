@@ -34,28 +34,28 @@ screener_symbols:
 alerts:
   rsi_extreme:
     enabled: true
-    overbought: 70
-    oversold: 30
-    timeframes: ["4h", "1d"]
-    cooldown_hours: 4
+    overbought: 80       # było 70 — teraz tylko naprawdę wykupione
+    oversold: 20         # było 30 — teraz tylko naprawdę wyprzedane
+    timeframes: ["1d"]   # tylko dzienny, bez 4h szumu
+    cooldown_hours: 12
   ma_cross:
     enabled: true
-    fast: 20
-    slow: 50
+    fast: 50
+    slow: 200            # było 20/50 — teraz golden/death cross 50/200 (poważniejszy sygnał)
     timeframes: ["1d"]
-    cooldown_hours: 8
+    cooldown_hours: 24
   macd_cross:
-    enabled: true
-    timeframes: ["4h", "1d"]
-    cooldown_hours: 4
+    enabled: false       # wyłączone — za dużo fałszywych sygnałów
+    timeframes: ["1d"]
+    cooldown_hours: 12
   bb_breakout:
-    enabled: true
+    enabled: false       # wyłączone — za częste na metalach
     timeframes: ["4h"]
-    cooldown_hours: 4
+    cooldown_hours: 12
   portfolio_change:
     enabled: true
-    threshold_pct: 3.0
-    cooldown_hours: 4
+    threshold_pct: 5.0   # było 3% — teraz tylko poważne ruchy
+    cooldown_hours: 12
 
 schedule:
   poll_interval_minutes: 2
